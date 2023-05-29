@@ -53,4 +53,24 @@ class ContactTest extends TestCase
         $this->assertDatabaseMissing('contacts', $contact->toArray());
     }
 
+    public function test_to_list_all_contacts()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->actingAs(User::factory()->create());
+        $response = $this->get('api/contact');
+        $response->assertJsonFragment(['per_page' => 20]);
+    }
+
+    public function test_to_retrieve_a_single_contact() {
+
+        $contact = Contact::factory()->create();
+
+        $this->actingAs(User::factory()->create());
+        $this->get("api/contact/{$contact->id}")->assertJson([
+            'name' => $contact->name,
+        ]);
+        
+    }
+
 }
