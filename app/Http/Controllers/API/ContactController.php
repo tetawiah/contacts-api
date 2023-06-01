@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class ContactController extends Controller
 {
@@ -85,5 +87,26 @@ class ContactController extends Controller
         $contact->delete();
 
         return response()->json(['message' => 'Success'], 200);
+    }
+
+    public function storeRecords()
+    {
+        $content = (new FileController)->uploadCSV();
+
+        try{
+        foreach ($content as $data) {
+            list($firstName, $lastName, $number) = $data;
+            Contact::create([
+                "name" => implode(" ", [$firstName, $lastName]),
+                "phone_number" => $number,
+            ]);
+        }
+        return response()->json([
+            "message" => "Success",
+        ], 201);}
+        catch(\Illuminate\Database\QueryException $e) {
+        Log::error("An error occured " . $e->getMessage());
+        }
+
     }
 }

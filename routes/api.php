@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ContactController;
+use App\Http\Controllers\API\FileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth')->group(function () {
-    Route::resource('/contact',ContactController::class);
-});
+// Route::middleware('auth')->group(function () {
+//     Route::resource('/contact',ContactController::class);
+// });
+
+Route::resource('/contact',ContactController::class);
+Route::post('/contact-upload',[FileController::class,'uploadCSV']);
+Route::post('/contact-save',[ContactController::class,'storeRecords']);
