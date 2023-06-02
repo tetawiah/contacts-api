@@ -20,5 +20,5 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::resource('/contact',ContactController::class);
-Route::post('/contact-upload',[FileController::class,'uploadCSV']);
+Route::post('/contact-upload',[FileController::class,'upload']);
 Route::post('/contact-save',[ContactController::class,'storeRecords']);

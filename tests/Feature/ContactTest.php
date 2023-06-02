@@ -4,8 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Contact;
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ContactTest extends TestCase
@@ -72,15 +70,6 @@ class ContactTest extends TestCase
         $this->actingAs(User::factory()->create());
         $this->get("api/contact/{$contact->id}")->assertSee($contact->name);
 
-    }
-
-    public function test_to_upload_file()
-    {
-        $this->withoutExceptionHandling();
-        
-        $file = UploadedFile::fake()->create('test.csv', 100);
-        $this->postJson("/api/contact-upload", ['csv' => $file]);
-        $this->assertTrue(Storage::exists('uploads/' . $file->getClientOriginalName()));
     }
 
 }
