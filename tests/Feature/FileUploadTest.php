@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Mockery;
 use App\Events\FileUploaded;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -15,7 +14,7 @@ class FileUploadTest extends TestCase
     /**
      * A basic feature test example.
      */
-
+//wont work without authenticated user
     public function test_to_upload_file()
     {
         $this->withoutExceptionHandling();
@@ -25,17 +24,19 @@ class FileUploadTest extends TestCase
         $this->assertTrue(Storage::exists('uploads/' . $file->getClientOriginalName()));
     }
 
-    public function test_event_fired_when_file_is_uploaded()
+    public function test_mail_sent()
     {
         $this->withoutExceptionHandling();
 
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->create(
+            ["email" => "dedasih840@onlcool.com"]
+        ));
         $file = UploadedFile::fake()->create('test.csv');
 
         event(new FileUploaded($file));
         Mail::assertSent(function ($mail) {
             return $mail->hasTo(auth()->user()->email) && $mail->subject === "New File Uploaded";
         });
-        
+
     }
 }

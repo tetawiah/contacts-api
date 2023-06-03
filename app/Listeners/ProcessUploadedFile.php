@@ -19,9 +19,10 @@ class ProcessUploadedFile
      */
     public function handle(object $event): void
     {
-        Mail::raw($event->file->getClientOriginalName() . " has been successfully uploaded", function ($message) use ($event) {
+        Mail::raw($event->file->getClientOriginalName() . " has been successfully uploaded", function ($message){
             $message->to(auth()->user()->email)->subject('New File Uploaded');
 
         });
-    }
+
+        }
 }
